@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import SearchItem from './SearchItem';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [search, setSearch] = useState('');
 
   const handleAddTodo = () => {
     if (inputValue.trim() !== '') {
@@ -16,7 +18,12 @@ const TodoList = () => {
       setInputValue('');
     }
   };
-
+  const handleSearch = (value) => {
+    setSearch(value);
+  };
+  const filteredTodos = todos.filter(todo =>
+    todo.text.toLowerCase().includes(search.toLowerCase())
+  );  
   const handleToggleComplete = (id) => {
     const updatedTodos = todos.map(todo => {
       if (todo.id === id) {
@@ -42,8 +49,16 @@ const TodoList = () => {
         onChange={(e) => setInputValue(e.target.value)}
       />
       <button onClick={handleAddTodo}>Add</button>
+
+      <todo search={search} onSearch={handleSearch} />
+      
+      <SearchItem
+        search={search}
+        setSearch={setSearch}
+      />
+      
       <ul>
-        {todos.map(todo => (
+        {filteredTodos.map(todo => (
           <li key={todo.id}>
             <input
               type="checkbox"
